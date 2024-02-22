@@ -1,0 +1,87 @@
+/* General styling for the audio-player container */
+
+body{
+  /* background: linear-gradient(to right, #0b0b0b, #302e2d); */
+  background-color:rgb(22, 22, 22); 
+}
+.audio-player-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+}.audio-player {
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;     
+  justify-content: center;
+  padding: 1rem;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 600px;
+  font-family: 'roboto';
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  color: white;
+  box-shadow: 0 4px 30px rgba(255, 255, 255, 0.1), 0 0 10px rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(245, 248, 250, 0.3);
+}
+
+.audio-player h1 {
+  width: 100%;  /* Make the width 100% to fill the container */
+  text-align: center; /* Center the text horizontally */
+  margin-bottom: 1rem; /* Add some spacing below the h1 */
+}
+
+/* Styling for the playeraudioname div inside audio-player */
+.playeraudioname {
+  background: transparent;
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(243, 244, 244, 0.3);
+  padding: 40px;
+  width: 70%;
+}
+
+/* Styling for the image inside audio-player */
+/* .audio-player img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 1rem;
+} */
+
+/* Styling for the file input */
+
+
+/* Styling for the audio element */
+audio {
+  margin-top: 1rem;
+  max-width: 100%;
+}
+
+/* Media query for smaller screens */
+@media screen and (max-width: 600px) {
+  .audio-player {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .audio-player img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1rem;
+  }
+
+  input {
+    width: 80%;
+  }
+
+  audio {
+    margin-top: 1rem;
+  }
+}
