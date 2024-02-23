@@ -1,38 +1,44 @@
 import React, { useState, useEffect } from "react";
-import Pagination from '@mui/material/Pagination';
+import { BarLoader } from "react-spinners";
 
 const App = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [planets, setPlanets] = useState([]);
-  const [residents, setResidents] = useState([]);
+  const [residentsMap, setResidentsMap] = useState({});
+  const [expandedPlanet, setExpandedPlanet] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const fetchPlanets = async () => {
     try {
+      setLoading(true);
       const response = await fetch(
         `https://swapi.dev/api/planets/?page=${currentPage}&format=json`
       );
       const data = await response.json();
       setPlanets(data.results);
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const fetchResidents = async (residentUrls) => {
+  const fetchResidents = async (residentUrls, planetIndex) => {
     try {
+      setLoading(true);
       const residentsData = await Promise.all(
         residentUrls.map(async (url) => {
-          console.log(url)
           const response = await fetch(url);
-          console.log(response.json());
           return await response.json();
         })
       );
-      setResidents(residentsData);
+      setLoading(false);
+      setResidentsMap((prevMap) => ({
+        ...prevMap,
+        [planetIndex]: residentsData,
+      }));
     } catch (error) {
-      console.log("error",error)
+      console.log(error);
     }
-    
   };
 
   useEffect(() => {
@@ -41,33 +47,65 @@ const App = () => {
 
   useEffect(() => {
     if (planets.length > 0) {
-      const residentUrls = planets.flatMap((planet) => planet.residents);
-      fetchResidents(residentUrls);
+      planets.forEach((planet, index) => {
+        const residentUrls = planet.residents;
+        fetchResidents(residentUrls, index);
+      });
     }
   }, [planets]);
+
+  const togglePlanetExpansion = (index) => {
+    setExpandedPlanet((prevExpanded) =>
+      prevExpanded === index ? null : index
+    );
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   return (
     <>
       <h1 style={{ fontSize: "50px", textAlign: "center", color: "white" }}>
-        Audio Player
+        Star Wars
       </h1>
+      <hr />
+      <div className="pagination" style={{alignContent:"center"}}>
+        {Array.from({ length: 6 }, (_, i) => i + 1).map((page) => (
+          <button
+            key={page}
+            onClick={() => handlePageChange(page)}
+            className={currentPage === page ? 'active' : ''}
+          >
+            {page}
+          </button>
+        ))}
+      </div>
+      
       {planets &&
         planets.map((item, index) => (
-          <div className="audio-player-container" key={index}>
-            <div className="audio-player">
-              <h1 >{item.name}</h1>
-              <div className="playeraudioname">
-                <div className="playeraudioname">
-                  <span style={{color:"yellow", fontSize:"20px"}}>CLIMATE</span> : <span style={{color:"white", fontSize:"20px",textTransform:"uppercase"}}>{item.climate}</span>
-                </div>
-                <br />
-                <div className="playeraudioname"><span style={{color:"yellow", fontSize:"20px"}}>TERRAIN</span>: <span style={{color:"white", fontSize:"20px",textTransform:"uppercase"}}>{item.terrain}</span></div>
-                <br />
-                <div className="playeraudioname"><span style={{color:"yellow", fontSize:"20px"}}>population</span>: <span style={{color:"white", fontSize:"20px",textTransform:"uppercase"}}>{item.population}</span></div>
-                <ul>
-                  {residents.length > 0 ? (
-                    residents.map((resident, index) => (
-                      <li key={index}>
+          <div
+            className={`star-details-container ${expandedPlanet === index ? 'expanded' : ''}`}
+            key={index}
+          >
+            <div className="star-details">
+              <h1>{item.name}</h1>
+              
+              <div className="stardetailsname" style={{fontSize:"15px"}}><span>CLIMATE :</span><span style={{textTransform:"uppercase"}}>    {item.climate}</span></div>
+              <br />
+              <div className="stardetailsname" style={{fontSize:"15px"}}><span>TERRAIN :</span><span style={{textTransform:"uppercase"}}>    {item.terrain}</span></div>
+              <br />
+              <div className="stardetailsname1" style={{fontSize:"15px"}}> <p><span>POPULATION :</span><span style={{textTransform:"uppercase"}}>    {item.population}</span></p>
+                <button onClick={() => togglePlanetExpansion(index)}>
+                  Show Population
+                </button>
+              </div>
+
+              {expandedPlanet === index && (
+                !loading ? (<ul>
+                  {residentsMap[index] && residentsMap[index].length > 0 ? (
+                    residentsMap[index].map((resident, resIndex) => (
+                      <li key={resIndex}>
                         {resident.name} - Height: {resident.height}, Mass:{" "}
                         {resident.mass}, Gender: {resident.gender}
                       </li>
@@ -75,23 +113,29 @@ const App = () => {
                   ) : (
                     <li>No residents</li>
                   )}
-                </ul>
-              </div>
+                </ul>):(
+                  <>
+                  <BarLoader color="#36d7b7" />
+                  <span className="uploading-text">fetching data...</span>
+                  </>
+
+                )
+              )}
             </div>
           </div>
         ))}
-      {currentPage !== 1 ? (
-        <button onClick={() => setCurrentPage(currentPage - 1)}>
-          previous
-        </button>
-      ) : (
-        <button disabled>previous</button>
-      )}
-      {currentPage !== 6 ? (
-        <button onClick={() => setCurrentPage(currentPage + 1)}>next</button>
-      ) : (
-        <button disabled>previous</button>
-      )}
+      
+      <div className="pagination" style={{alignContent:"center"}}>
+        {Array.from({ length: 6 }, (_, i) => i + 1).map((page) => (
+          <button
+            key={page}
+            onClick={() => handlePageChange(page)}
+            className={currentPage === page ? 'active' : ''}
+          >
+            {page}
+          </button>
+        ))}
+      </div>
     </>
   );
 };

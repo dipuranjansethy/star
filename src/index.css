@@ -1,14 +1,13 @@
-/* General styling for the audio-player container */
 
 body{
-  /* background: linear-gradient(to right, #0b0b0b, #302e2d); */
+  
   background-color:rgb(22, 22, 22); 
 }
-.audio-player-container {
+.star-details-container {
   display: flex;
   justify-content: center;
   padding: 2rem 0;
-}.audio-player {
+}.star-details {
   z-index: 0;
   display: flex;
   flex-direction: column;
@@ -29,13 +28,12 @@ body{
 }
 
 .audio-player h1 {
-  width: 100%;  /* Make the width 100% to fill the container */
-  text-align: center; /* Center the text horizontally */
-  margin-bottom: 1rem; /* Add some spacing below the h1 */
+  width: 100%;  
+  text-align: center; 
+  margin-bottom: 1rem; 
 }
 
-/* Styling for the playeraudioname div inside audio-player */
-.playeraudioname {
+.stardetailsname {
   background: transparent;
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -44,27 +42,40 @@ body{
   border: 1px solid rgba(243, 244, 244, 0.3);
   padding: 40px;
   width: 70%;
+  
 }
 
-/* Styling for the image inside audio-player */
-/* .audio-player img {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 1rem;
-} */
+.stardetailsname1 {
+  background: transparent;
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(243, 244, 244, 0.3);
+  padding: 40px;
+  width: 70%;
+  display: flex;
+  flex-direction: row;
+  button {
+    background-color: #36d7b7;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    margin-left: auto; /* Add this line to move the button to the right */
+    transition: background-color 0.3s ease;
 
-/* Styling for the file input */
+    &:hover {
+        background-color: #2c9c89;
+    }
+  }
+}
 
-
-/* Styling for the audio element */
 audio {
   margin-top: 1rem;
   max-width: 100%;
 }
 
-/* Media query for smaller screens */
 @media screen and (max-width: 600px) {
   .audio-player {
     flex-direction: column;
@@ -84,4 +95,29 @@ audio {
   audio {
     margin-top: 1rem;
   }
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  background-color: #36d7b7;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button:hover {
+  background-color: #2ea999;
+}
+
+.pagination button.active {
+  background-color: #2ea999;
 }
