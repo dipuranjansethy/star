@@ -60,8 +60,20 @@ const App = () => {
     );
   };
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < 6) {
+      handlePageChange(currentPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      handlePageChange(currentPage - 1);
+    }
   };
 
   return (
@@ -70,71 +82,103 @@ const App = () => {
         Star Wars
       </h1>
       <hr />
-      <div className="pagination" style={{alignContent:"center"}}>
+
+      <div className="pagination" style={{ alignContent: "center" }}>
+        <button onClick={handlePrevPage} className="pagination-button">
+          {"<"}
+        </button>
         {Array.from({ length: 6 }, (_, i) => i + 1).map((page) => (
           <button
             key={page}
             onClick={() => handlePageChange(page)}
-            className={currentPage === page ? 'active' : ''}
+            className={`pagination-button ${currentPage === page ? 'active' : ''}`}
           >
             {page}
           </button>
         ))}
+        <button onClick={handleNextPage} className="pagination-button">
+          {">"}
+        </button>
       </div>
-      
-      {planets &&
-        planets.map((item, index) => (
-          <div
-            className={`star-details-container ${expandedPlanet === index ? 'expanded' : ''}`}
-            key={index}
-          >
-            <div className="star-details">
-              <h1>{item.name}</h1>
-              
-              <div className="stardetailsname" style={{fontSize:"15px"}}><span>CLIMATE :</span><span style={{textTransform:"uppercase"}}>    {item.climate}</span></div>
-              <br />
-              <div className="stardetailsname" style={{fontSize:"15px"}}><span>TERRAIN :</span><span style={{textTransform:"uppercase"}}>    {item.terrain}</span></div>
-              <br />
-              <div className="stardetailsname1" style={{fontSize:"15px"}}> <p><span>POPULATION :</span><span style={{textTransform:"uppercase"}}>    {item.population}</span></p>
-                <button onClick={() => togglePlanetExpansion(index)}>
-                  Show Population
-                </button>
+      <div className="main-container">
+        {planets &&
+          planets.map((item, index) => (
+            <div
+              className={`star-details-container ${expandedPlanet === index ? 'expanded' : ''}`}
+              key={index}
+            >
+              <div className="star-details">
+                <h1>{item.name}</h1>
+
+                <div className="stardetailsname" style={{ fontSize: "15px" }}>
+                  <span>CLIMATE :</span>
+                  <span style={{ textTransform: "uppercase" }}>
+                    {item.climate}
+                  </span>
+                </div>
+                <br />
+                <div className="stardetailsname" style={{ fontSize: "15px" }}>
+                  <span>TERRAIN :</span>
+                  <span style={{ textTransform: "uppercase" }}>
+                    {item.terrain}
+                  </span>
+                </div>
+                <br />
+                <div className="stardetailsname1" style={{ fontSize: "15px" }}>
+                  <p>
+                    <span>POPULATION :</span>
+                    <span style={{ textTransform: "uppercase" }}>
+                      {item.population}
+                    </span>
+                  </p>
+                  <button onClick={() => togglePlanetExpansion(index)}>
+                    Show Population
+                  </button>
+                </div>
+
+                {expandedPlanet === index && (
+                  !loading ? (
+                    <ul>
+                      {residentsMap[index] && residentsMap[index].length > 0 ? (
+                        residentsMap[index].map((resident, resIndex) => (
+                          <li key={resIndex}>
+                            {resident.name} - Height: {resident.height}, Mass:{" "}
+                            {resident.mass}, Gender: {resident.gender}
+                          </li>
+                        ))
+                      ) : (
+                        <li>No residents</li>
+                      )}
+                    </ul>
+                  ) : (
+                    <>
+                      <BarLoader color="#36d7b7" />
+                      <span className="uploading-text">fetching data...</span>
+                    </>
+                  )
+                )}
               </div>
 
-              {expandedPlanet === index && (
-                !loading ? (<ul>
-                  {residentsMap[index] && residentsMap[index].length > 0 ? (
-                    residentsMap[index].map((resident, resIndex) => (
-                      <li key={resIndex}>
-                        {resident.name} - Height: {resident.height}, Mass:{" "}
-                        {resident.mass}, Gender: {resident.gender}
-                      </li>
-                    ))
-                  ) : (
-                    <li>No residents</li>
-                  )}
-                </ul>):(
-                  <>
-                  <BarLoader color="#36d7b7" />
-                  <span className="uploading-text">fetching data...</span>
-                  </>
-
-                )
-              )}
             </div>
-          </div>
-        ))}
-      
-      <div className="pagination" style={{alignContent:"center"}}>
+          ))}
+          
+      </div>
+      <div className="pagination" style={{ alignContent: "center" }}>
+        <button onClick={handlePrevPage} className="pagination-button">
+          {"<"}
+        </button>
         {Array.from({ length: 6 }, (_, i) => i + 1).map((page) => (
           <button
             key={page}
             onClick={() => handlePageChange(page)}
-            className={currentPage === page ? 'active' : ''}
+            className={`pagination-button ${currentPage === page ? 'active' : ''}`}
           >
             {page}
           </button>
         ))}
+        <button onClick={handleNextPage} className="pagination-button">
+          {">"}
+        </button>
       </div>
     </>
   );
